@@ -1,2 +1,0 @@
-# bivora
-BIVORA Business Platform

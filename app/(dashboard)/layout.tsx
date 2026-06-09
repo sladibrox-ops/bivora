@@ -1,0 +1,17 @@
+import type { ReactNode } from 'react'
+
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/app-sidebar'
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: ReactNode
+}) {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="bg-background">{children}</SidebarInset>
+    </SidebarProvider>
+  )
+}
