@@ -85,7 +85,15 @@ export default function InvoicesPage() {
                 <TableRow key={inv.id}>
                   <TableCell>{inv.client_name}</TableCell>
                   <TableCell>{inv.amount}</TableCell>
-                  <TableCell>{inv.status}</TableCell>
+                 <TableCell>
+  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+    inv.status === 'Paid' ? 'bg-green-500/20 text-green-400' :
+    inv.status === 'Overdue' ? 'bg-red-500/20 text-red-400' :
+    'bg-yellow-500/20 text-yellow-400'
+  }`}>
+    {inv.status}
+  </span>
+</TableCell>
                   <TableCell>{inv.due_date}</TableCell>
                 </TableRow>
               ))}
