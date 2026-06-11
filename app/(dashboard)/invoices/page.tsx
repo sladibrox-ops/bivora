@@ -18,13 +18,15 @@ export default function InvoicesPage() {
   const [form, setForm] = useState({ client_name: '', amount: '', status: 'Pending', due_date: '' })
 
   useEffect(() => {
-    supabase.from('clients').select('*').then(({ data }) => {
-      if (data) setClients(data)
-    })
-    supabase.from('invoices').select('*').then(({ data }) => {
-      if (data) setInvoices(data)
-    })
-  }, [])
+  supabase.from('clients').select('*').then(({ data, error }) => {
+    console.log('clients data:', data)
+    console.log('clients error:', error)
+    if (data) setClients(data)
+  })
+  supabase.from('invoices').select('*').then(({ data }) => {
+    if (data) setInvoices(data)
+  })
+}, [])
 
   const handleAdd = async () => {
     if (!form.client_name || !form.amount) return
