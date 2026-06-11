@@ -9,22 +9,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 
+const supabase = createClient()
+
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<any[]>([])
   const [clients, setClients] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({ client_name: '', amount: '', status: 'Pending', due_date: '' })
 
-  const supabase = createClient()
-
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: clientsData } = await supabase.from('clients').select('id, name')
-      const { data: invoicesData } = await supabase.from('invoices').select('*')
-      if (clientsData) setClients(clientsData)
-      if (invoicesData) setInvoices(invoicesData)
-    }
-    fetchData()
+    supabase.from('clients').select('*').then(({ data }) => {
+      if (data) setClients(data)
+    })
+    supabase.from('invoices').select('*').then(({ data }) => {
+      if (data) setInvoices(data)
+    })
   }, [])
 
   const handleAdd = async () => {
