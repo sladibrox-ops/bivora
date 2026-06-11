@@ -18,11 +18,17 @@ export default function InvoicesPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.from('invoices').select('*').then(({ data }) => { if (data) setInvoices(data) })
-    supabase.from('clients').select('*').then(({ data }) => { if (data) setClients(data) })
+    const fetchData = async () => {
+      const { data: clientsData } = await supabase.from('clients').select('id, name')
+      const { data: invoicesData } = await supabase.from('invoices').select('*')
+      if (clientsData) setClients(clientsData)
+      if (invoicesData) setInvoices(invoicesData)
+    }
+    fetchData()
   }, [])
 
   const handleAdd = async () => {
+    if (!form.client_name || !form.amount) return
     const { data } = await supabase.from('invoices').insert([{ ...form, amount: Number(form.amount) }]).select()
     if (data) {
       setInvoices([...invoices, ...data])
