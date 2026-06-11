@@ -75,4 +75,16 @@ export default function InvoicesPage() {
             <TableBody>
               {invoices.map((inv) => (
                 <TableRow key={inv.id}>
-                  <TableCell>{inv.client_name}</TableCe
+                  <TableCell>{inv.client_name}</TableCell>
+                  <TableCell>{inv.amount}</TableCell>
+                  <TableCell>{inv.status}</TableCell>
+                  <TableCell>{inv.due_date}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
