@@ -1,7 +1,6 @@
 'use client'
 
 import { Bell, Search } from 'lucide-react'
-
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
@@ -15,9 +14,11 @@ import {
 export function PageHeader({
   title,
   description,
+  children,
 }: {
   title: string
   description?: string
+  children?: React.ReactNode
 }) {
   return (
     <header className="sticky top-0 z-10 flex flex-col gap-3 border-b border-border bg-background/80 px-4 py-3 backdrop-blur md:px-6">
@@ -34,24 +35,7 @@ export function PageHeader({
             </p>
           ) : null}
         </div>
-
-        <div className="hidden md:block">
-          <InputGroup className="w-64">
-            <InputGroupAddon>
-              <Search className="size-4 text-muted-foreground" />
-            </InputGroupAddon>
-            <InputGroupInput placeholder="Search anything..." />
-          </InputGroup>
-        </div>
-
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell />
-        </Button>
-        <Avatar className="size-8">
-          <AvatarFallback className="bg-primary text-xs text-primary-foreground">
-            AM
-          </AvatarFallback>
-        </Avatar>
+        {children}
       </div>
     </header>
   )
