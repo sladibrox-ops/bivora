@@ -16,6 +16,7 @@ export default function InvoicesPage() {
   const [clients, setClients] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({ client_name: '', amount: '', status: 'Pending', due_date: '' })
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
   supabase.from('clients').select('*').then(({ data, error }) => {
@@ -53,7 +54,7 @@ export default function InvoicesPage() {
             </div>
             <select className="border rounded p-2 bg-background text-foreground" value={form.client_name} onChange={e => setForm({...form, client_name: e.target.value})}>
               <option value="">Select Client</option>
-              {clients.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+              {mounted && clients.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
             </select>
             <Input placeholder="Amount" type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} />
             <Input placeholder="Due Date" type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} />
