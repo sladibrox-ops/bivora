@@ -1,169 +1,237 @@
-'use client'
+"use client";
 
-import { useRef, useState } from 'react'
-import { Sparkles, Send, Bot, User } from 'lucide-react'
-
-import { PageHeader } from '@/components/page-header'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupTextarea,
-} from '@/components/ui/input-group'
-import { cn } from '@/lib/utils'
+import { useState, useRef, useEffect } from "react";
 
 type Message = {
-  id: number
-  role: 'user' | 'assistant'
-  content: string
-}
-
-const suggestions = [
-  'Summarize this month\u2019s revenue',
-  'Which invoices are overdue?',
-  'Draft a follow-up email to Helios Retail',
-  'Show project deadlines this week',
-]
-
-const cannedReplies: Record<string, string> = {
-  default:
-    'Here is a quick overview based on your workspace data. Revenue is up 12.4% month-over-month at $358,200, with 42 active clients and 18 projects in progress. Let me know if you\u2019d like a deeper breakdown of any area.',
-}
+  role: "user" | "assistant";
+  content: string;
+};
 
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: 0,
-      role: 'assistant',
-      content:
-        'Hi, I\u2019m the BIVORA assistant. I can help you analyze revenue, draft client communications, track invoices and surface project risks. What would you like to do?',
+      role: "assistant",
+      content: "Zdravo! Ja sam BIVORA AI asistent. Mogu vam pomoći s pitanjima o poslovanju, financijama, klijentima i upravljanju projektima. Kako vam mogu pomoći danas?",
     },
-  ])
-  const [input, setInput] = useState('')
-  const idRef = useRef(1)
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-  const send = (text: string) => {
-    const content = text.trim()
-    if (!content) return
-    const userMsg: Message = {
-      id: idRef.current++,
-      role: 'user',
-      content,
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMsg: Message = { role: "user", content: input };
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: `Ti si BIVORA poslovni AI asistent. BIVORA je poslovna nadzorna ploča za upravljanje klijentima, fakturama, zaposlenicima, projektima i transakcijama. 
+Pomaži korisnicima s poslovnim savjetima, analizom podataka, upravljanjem projektima i financijskim pitanjima.
+Odgovaraj na jeziku na kojem ti korisnik piše (bosanski, hrvatski, srpski, engleski, njemački).
+Budi koncizan, profesionalan i koristan.`,
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+      const assistantMsg: Message = {
+        role: "assistant",
+        content: data.content?.[0]?.text || "Žao mi je, došlo je do greške. Pokušajte ponovo.",
+      };
+      setMessages([...newMessages, assistantMsg]);
+    } catch {
+      setMessages([
+        ...newMessages,
+        { role: "assistant", content: "Greška u komunikaciji. Provjerite vezu i pokušajte ponovo." },
+      ]);
     }
-    const reply: Message = {
-      id: idRef.current++,
-      role: 'assistant',
-      content: cannedReplies.default,
-    }
-    setMessages((prev) => [...prev, userMsg, reply])
-    setInput('')
-  }
+
+    setLoading(false);
+  };
+
+  const brziUpiti = [
+    "Kako povećati prihode?",
+    "Savjeti za upravljanje projektima",
+    "Kako pratiti cashflow?",
+    "Strategija za nove klijente",
+  ];
 
   return (
-    <>
-      <PageHeader
-        title="AI Assistant"
-        description="Ask questions about your business in natural language."
-      />
-      <main className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-        <Card className="flex flex-1 flex-col overflow-hidden">
-          <CardContent className="flex flex-1 flex-col gap-4 p-0">
-            <ScrollArea className="flex-1 px-4 py-6 md:px-6">
-              <div className="mx-auto flex max-w-2xl flex-col gap-6">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={cn(
-                      'flex gap-3',
-                      message.role === 'user' && 'flex-row-reverse',
-                    )}
-                  >
-                    <Avatar className="size-8 shrink-0">
-                      <AvatarFallback
-                        className={cn(
-                          message.role === 'assistant'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-secondary',
-                        )}
-                      >
-                        {message.role === 'assistant' ? (
-                          <Bot className="size-4" />
-                        ) : (
-                          <User className="size-4" />
-                        )}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div
-                      className={cn(
-                        'rounded-xl px-4 py-3 text-sm leading-relaxed',
-                        message.role === 'assistant'
-                          ? 'bg-muted text-foreground'
-                          : 'bg-primary text-primary-foreground',
-                      )}
-                    >
-                      {message.content}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+    <div style={styles.page}>
+      <div style={styles.header}>
+        <div>
+          <h1 style={styles.title}>AI Asistent</h1>
+          <p style={styles.subtitle}>Vaš poslovni savjetnik na zahtjev</p>
+        </div>
+        <div style={styles.statusBadge}>
+          <span style={styles.statusDot} />
+          Aktivan
+        </div>
+      </div>
 
-            <div className="flex flex-col gap-3 border-t border-border p-4 md:p-6">
-              <div className="mx-auto flex w-full max-w-2xl flex-wrap gap-2">
-                {suggestions.map((suggestion) => (
-                  <Button
-                    key={suggestion}
-                    variant="outline"
-                    size="sm"
-                    className="h-auto rounded-full text-xs"
-                    onClick={() => send(suggestion)}
-                  >
-                    <Sparkles data-icon="inline-start" />
-                    {suggestion}
-                  </Button>
-                ))}
-              </div>
-
-              <form
-                className="mx-auto w-full max-w-2xl"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  send(input)
+      {/* Chat prozor */}
+      <div style={styles.chatWrap}>
+        <div style={styles.messages}>
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              style={{
+                ...styles.msgRow,
+                justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
+              }}
+            >
+              {msg.role === "assistant" && (
+                <div style={styles.avatar}>B</div>
+              )}
+              <div
+                style={{
+                  ...styles.bubble,
+                  ...(msg.role === "user" ? styles.bubbleUser : styles.bubbleAssistant),
                 }}
               >
-                <InputGroup>
-                  <InputGroupTextarea
-                    placeholder="Ask the BIVORA assistant anything..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault()
-                        send(input)
-                      }
-                    }}
-                  />
-                  <InputGroupAddon align="block-end">
-                    <InputGroupButton
-                      type="submit"
-                      variant="default"
-                      className="ml-auto"
-                      disabled={!input.trim()}
-                    >
-                      <Send data-icon="inline-start" />
-                      Send
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </form>
+                {msg.content}
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </main>
-    </>
-  )
+          ))}
+
+          {loading && (
+            <div style={{ ...styles.msgRow, justifyContent: "flex-start" }}>
+              <div style={styles.avatar}>B</div>
+              <div style={styles.bubbleAssistant}>
+                <span style={styles.typing}>●●●</span>
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Brzi upiti */}
+        {messages.length === 1 && (
+          <div style={styles.brziRow}>
+            {brziUpiti.map((upit, i) => (
+              <button
+                key={i}
+                onClick={() => setInput(upit)}
+                style={styles.brziBtn}
+              >
+                {upit}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Input */}
+        <div style={styles.inputRow}>
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Postavite pitanje..."
+            style={styles.input}
+            disabled={loading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            style={{
+              ...styles.sendBtn,
+              opacity: loading || !input.trim() ? 0.5 : 1,
+              cursor: loading || !input.trim() ? "not-allowed" : "pointer",
+            }}
+          >
+            ➤
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  page: { padding: "32px", maxWidth: "800px", fontFamily: "'Inter', sans-serif", height: "calc(100vh - 64px)", display: "flex", flexDirection: "column" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "24px" },
+  title: { fontSize: "24px", fontWeight: "700", color: "#ffffff", margin: 0 },
+  subtitle: { color: "rgba(255,255,255,0.4)", fontSize: "14px", margin: "4px 0 0" },
+  statusBadge: {
+    display: "flex", alignItems: "center", gap: "8px",
+    background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
+    borderRadius: "20px", padding: "6px 14px",
+    color: "#34d399", fontSize: "13px", fontWeight: "500",
+  },
+  statusDot: {
+    width: "8px", height: "8px", borderRadius: "50%", background: "#34d399",
+  },
+  chatWrap: {
+    flex: 1, display: "flex", flexDirection: "column",
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "16px", overflow: "hidden",
+  },
+  messages: {
+    flex: 1, overflowY: "auto" as const, padding: "24px",
+    display: "flex", flexDirection: "column", gap: "16px",
+  },
+  msgRow: { display: "flex", alignItems: "flex-end", gap: "10px" },
+  avatar: {
+    width: "32px", height: "32px", borderRadius: "8px", flexShrink: 0,
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    color: "#fff", fontSize: "14px", fontWeight: "700",
+  },
+  bubble: {
+    maxWidth: "70%", padding: "12px 16px", borderRadius: "12px",
+    fontSize: "14px", lineHeight: "1.6",
+  },
+  bubbleUser: {
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    color: "#fff", borderBottomRightRadius: "4px",
+  },
+  bubbleAssistant: {
+    background: "rgba(255,255,255,0.08)",
+    color: "rgba(255,255,255,0.85)", borderBottomLeftRadius: "4px",
+  },
+  typing: { color: "rgba(255,255,255,0.4)", letterSpacing: "2px" },
+  brziRow: {
+    display: "flex", flexWrap: "wrap" as const, gap: "8px",
+    padding: "0 24px 16px",
+  },
+  brziBtn: {
+    background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)",
+    borderRadius: "20px", padding: "8px 14px",
+    color: "#a5b4fc", fontSize: "13px", cursor: "pointer",
+  },
+  inputRow: {
+    display: "flex", gap: "12px", padding: "16px 20px",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+  },
+  input: {
+    flex: 1, background: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: "10px", padding: "12px 16px",
+    color: "#fff", fontSize: "14px", outline: "none",
+  },
+  sendBtn: {
+    width: "44px", height: "44px", borderRadius: "10px",
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    border: "none", color: "#fff", fontSize: "16px",
+  },
+};
