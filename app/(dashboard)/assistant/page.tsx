@@ -32,26 +32,18 @@ export default function AssistantPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          system: `Ti si BIVORA poslovni AI asistent. BIVORA je poslovna nadzorna ploča za upravljanje klijentima, fakturama, zaposlenicima, projektima i transakcijama. 
-Pomaži korisnicima s poslovnim savjetima, analizom podataka, upravljanjem projektima i financijskim pitanjima.
-Odgovaraj na jeziku na kojem ti korisnik piše (bosanski, hrvatski, srpski, engleski, njemački).
-Budi koncizan, profesionalan i koristan.`,
           messages: newMessages.map((m) => ({
             role: m.role,
             content: m.content,
           })),
         }),
       });
-
-      const data = await response.json();
       const assistantMsg: Message = {
         role: "assistant",
         content: data.content?.[0]?.text || "Žao mi je, došlo je do greške. Pokušajte ponovo.",
