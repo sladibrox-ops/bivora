@@ -44,6 +44,7 @@ export default function AssistantPage() {
           })),
         }),
       });
+      const data = await response.json();
       const assistantMsg: Message = {
         role: "assistant",
         content: data.content?.[0]?.text || "Žao mi je, došlo je do greške. Pokušajte ponovo.",
