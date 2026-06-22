@@ -248,7 +248,7 @@ const content: Record<Lang, JSX.Element> = {
         </p>
       </Section>
     </>
-  ),"
+ ),
  de: (
     <>
       <h1 style={styles.title}>Datenschutzerklärung &amp; Nutzungsbedingungen</h1>
