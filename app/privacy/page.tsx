@@ -4,6 +4,112 @@ import { useState } from "react";
 
 type Lang = "hr" | "en" | "de";
 
+/* ---------- Styles (matches BIVORA dark theme) ---------- */
+
+const styles: Record<string, React.CSSProperties> = {
+  page: {
+    minHeight: "100vh",
+    background: "#0b0b12",
+    fontFamily: "'Inter', sans-serif",
+    padding: "48px 20px",
+  },
+  container: {
+    maxWidth: "760px",
+    margin: "0 auto",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "40px",
+    flexWrap: "wrap" as const,
+    gap: "16px",
+  },
+  brandRow: { display: "flex", alignItems: "center", gap: "12px" },
+  logo: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "10px",
+    background: "linear-gradient(135deg, #34d399, #10b981)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#0b0b12",
+    fontWeight: "800",
+    fontSize: "18px",
+  },
+  brandName: { color: "#fff", fontWeight: "700", fontSize: "16px" },
+  brandSub: { color: "rgba(255,255,255,0.4)", fontSize: "12px" },
+  langSwitch: {
+    display: "flex",
+    gap: "4px",
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "10px",
+    padding: "4px",
+  },
+  langBtn: {
+    background: "transparent",
+    border: "none",
+    color: "rgba(255,255,255,0.5)",
+    padding: "6px 14px",
+    borderRadius: "7px",
+    fontSize: "13px",
+    fontWeight: "600",
+    cursor: "pointer",
+  },
+  langBtnActive: {
+    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+    color: "#fff",
+  },
+  content: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "16px",
+    padding: "40px",
+  },
+  title: {
+    color: "#fff",
+    fontSize: "26px",
+    fontWeight: "800",
+    margin: "0 0 8px",
+  },
+  updated: {
+    color: "rgba(255,255,255,0.4)",
+    fontSize: "13px",
+    margin: "0 0 32px",
+  },
+  section: { marginBottom: "28px" },
+  h2: {
+    color: "#a5b4fc",
+    fontSize: "16px",
+    fontWeight: "700",
+    margin: "0 0 10px",
+  },
+  p: {
+    color: "rgba(255,255,255,0.75)",
+    fontSize: "14px",
+    lineHeight: "1.7",
+    margin: 0,
+  },
+  ul: { margin: 0, paddingLeft: "20px" },
+  li: {
+    color: "rgba(255,255,255,0.75)",
+    fontSize: "14px",
+    lineHeight: "1.7",
+    marginBottom: "6px",
+  },
+  link: { color: "#a5b4fc", textDecoration: "underline" },
+  footer: {
+    marginTop: "32px",
+    textAlign: "center" as const,
+  },
+  footerText: {
+    color: "rgba(255,255,255,0.3)",
+    fontSize: "12px",
+  },
+};
+
 export default function PrivacyPage() {
   const [lang, setLang] = useState<Lang>("hr");
 
@@ -248,8 +354,9 @@ const content: Record<Lang, JSX.Element> = {
         </p>
       </Section>
     </>
- ),
- de: (
+  ),
+
+  de: (
     <>
       <h1 style={styles.title}>Datenschutzerklärung &amp; Nutzungsbedingungen</h1>
       <p style={styles.updated}>Zuletzt aktualisiert: 22. Juni 2026</p>
@@ -378,109 +485,3 @@ function List({ items }: { items: string[] }) {
     </ul>
   );
 }
-
-/* ---------- Styles (matches BIVORA dark theme) ---------- */
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "100vh",
-    background: "#0b0b12",
-    fontFamily: "'Inter', sans-serif",
-    padding: "48px 20px",
-  },
-  container: {
-    maxWidth: "760px",
-    margin: "0 auto",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "40px",
-    flexWrap: "wrap" as const,
-    gap: "16px",
-  },
-  brandRow: { display: "flex", alignItems: "center", gap: "12px" },
-  logo: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "10px",
-    background: "linear-gradient(135deg, #34d399, #10b981)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#0b0b12",
-    fontWeight: "800",
-    fontSize: "18px",
-  },
-  brandName: { color: "#fff", fontWeight: "700", fontSize: "16px" },
-  brandSub: { color: "rgba(255,255,255,0.4)", fontSize: "12px" },
-  langSwitch: {
-    display: "flex",
-    gap: "4px",
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "10px",
-    padding: "4px",
-  },
-  langBtn: {
-    background: "transparent",
-    border: "none",
-    color: "rgba(255,255,255,0.5)",
-    padding: "6px 14px",
-    borderRadius: "7px",
-    fontSize: "13px",
-    fontWeight: "600",
-    cursor: "pointer",
-  },
-  langBtnActive: {
-    background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-    color: "#fff",
-  },
-  content: {
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "16px",
-    padding: "40px",
-  },
-  title: {
-    color: "#fff",
-    fontSize: "26px",
-    fontWeight: "800",
-    margin: "0 0 8px",
-  },
-  updated: {
-    color: "rgba(255,255,255,0.4)",
-    fontSize: "13px",
-    margin: "0 0 32px",
-  },
-  section: { marginBottom: "28px" },
-  h2: {
-    color: "#a5b4fc",
-    fontSize: "16px",
-    fontWeight: "700",
-    margin: "0 0 10px",
-  },
-  p: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: "14px",
-    lineHeight: "1.7",
-    margin: 0,
-  },
-  ul: { margin: 0, paddingLeft: "20px" },
-  li: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: "14px",
-    lineHeight: "1.7",
-    marginBottom: "6px",
-  },
-  link: { color: "#a5b4fc", textDecoration: "underline" },
-  footer: {
-    marginTop: "32px",
-    textAlign: "center" as const,
-  },
-  footerText: {
-    color: "rgba(255,255,255,0.3)",
-    fontSize: "12px",
-  },
-};   
