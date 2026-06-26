@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
@@ -13,6 +13,15 @@ export const metadata: Metadata = {
   description:
     'BIVORA is a modern business management dashboard for clients, invoices, employees, projects and transactions.',
   generator: 'v0.app',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/icon-192.png',
+    apple: '/apple-icon.png',
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#10b981',
 }
 
 export default function RootLayout({
