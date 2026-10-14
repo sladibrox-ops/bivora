@@ -31,21 +31,21 @@ import {
 } from '@/components/ui/sidebar'
 
 const mainNav = [
-  { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-  { title: 'Clients', url: '/clients', icon: Users },
-  { title: 'Invoices', url: '/invoices', icon: FileText },
-  { title: 'Employees', url: '/employees', icon: Briefcase },
-  { title: 'Projects', url: '/projects', icon: FolderKanban },
-  { title: 'Transactions', url: '/transactions', icon: ArrowLeftRight },
+  { title: 'Nadzorna ploča', url: '/', icon: LayoutDashboard },
+  { title: 'Klijenti', url: '/clients', icon: Users },
+  { title: 'Fakture', url: '/invoices', icon: FileText },
+  { title: 'Zaposlenici', url: '/employees', icon: Briefcase },
+  { title: 'Projekti', url: '/projects', icon: FolderKanban },
+  { title: 'Transakcije', url: '/transactions', icon: ArrowLeftRight },
 ]
 
 const toolsNav = [
-  { title: 'AI Assistant', url: '/assistant', icon: Sparkles },
+  { title: 'AI asistent', url: '/assistant', icon: Sparkles },
 ]
 
 const bottomNav = [
-  { title: 'Settings', url: '/settings', icon: Settings },
-  { title: 'Support', url: '/support', icon: LifeBuoy },
+  { title: 'Postavke', url: '/settings', icon: Settings },
+  { title: 'Podrška', url: '/support', icon: LifeBuoy },
 ]
 
 export function AppSidebar() {
@@ -79,7 +79,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>Poslovanje</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNav.map((item) => (
@@ -98,7 +98,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupLabel>Alati</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {toolsNav.map((item) => (
