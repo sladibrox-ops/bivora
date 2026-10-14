@@ -8,8 +8,11 @@ declare
   owner uuid;
   pol record;
 begin
-  -- Postojeći redovi dobivaju vlasnika: najstariji račun (prvi registrirani korisnik).
-  select id into owner from auth.users order by created_at limit 1;
+  -- Postojeći redovi dobivaju vlasnika: Sladin račun (UID iz Authentication → Users).
+  select id into owner from auth.users where id = 'cb09d80f-f720-4b78-bbb6-aaa16890daf3';
+  if owner is null then
+    raise exception 'Vlasnički račun nije pronađen u auth.users';
+  end if;
 
   foreach t in array array['clients', 'invoices', 'employees', 'projects', 'transactions'] loop
     if to_regclass('public.' || t) is null then
@@ -17,9 +20,7 @@ begin
     end if;
 
     execute format('alter table public.%I add column if not exists user_id uuid references auth.users(id) on delete cascade default auth.uid()', t);
-    if owner is not null then
-      execute format('update public.%I set user_id = %L where user_id is null', t, owner);
-    end if;
+    execute format('update public.%I set user_id = %L where user_id is null', t, owner);
 
     execute format('alter table public.%I enable row level security', t);
 
