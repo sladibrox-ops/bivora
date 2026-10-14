@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard,
   Users,
@@ -12,6 +13,7 @@ import {
   Sparkles,
   Settings,
   LifeBuoy,
+  LogOut,
 } from 'lucide-react'
 
 import {
@@ -48,6 +50,13 @@ const bottomNav = [
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await createClient().auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
 
   const isActive = (url: string) =>
     url === '/' ? pathname === '/' : pathname.startsWith(url)
@@ -121,6 +130,12 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={handleSignOut}>
+              <LogOut />
+              <span>Odjava</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
