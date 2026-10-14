@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { ServiceWorkerRegister } from '@/components/sw-register'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -9,9 +10,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'BIVORA — Business Management',
+  title: 'BIVORA — poslovna nadzorna ploča',
   description:
-    'BIVORA is a modern business management dashboard for clients, invoices, employees, projects and transactions.',
+    'BIVORA je moderna poslovna nadzorna ploča za klijente, fakture, zaposlenike, projekte i transakcije.',
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {
@@ -31,10 +32,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="hr"
       className={`dark ${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="bg-background font-sans antialiased">{children}</body>
+      <body className="bg-background font-sans antialiased">
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   )
 }

@@ -1,7 +1,10 @@
 {
-  "name": "Bivora Biz",
-  "short_name": "Bivora Biz",
-  "description": "BIVORA Business Suite — poslovna platforma za poduzeća (Enterprise) za upravljanje klijentima, fakturama, projektima i financijama.",
+  "id": "/",
+  "name": "BIVORA",
+  "short_name": "BIVORA",
+  "description": "BIVORA — poslovna nadzorna ploča za klijente, fakture, zaposlenike, projekte i transakcije.",
+  "lang": "hr",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -45,5 +48,10 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
   ]
 }

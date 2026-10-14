@@ -11,6 +11,8 @@ import { Input } from '@/components/ui/input'
 
 const supabase = createClient()
 
+const statusLabels: Record<string, string> = { Pending: 'Na čekanju', Paid: 'Plaćeno', Overdue: 'Kasni' }
+
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<any[]>([])
   const [clients, setClients] = useState<any[]>([])
@@ -41,43 +43,43 @@ export default function InvoicesPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <PageHeader title="Invoices" description="Track billing, payments and outstanding balances.">
-        <Button onClick={() => setOpen(true)}><Plus className="mr-2 h-4 w-4" />Add Invoice</Button>
+      <PageHeader title="Fakture" description="Praćenje naplate, uplata i otvorenih iznosa.">
+        <Button onClick={() => setOpen(true)}><Plus className="mr-2 h-4 w-4" />Dodaj fakturu</Button>
       </PageHeader>
 
       {open && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Add New Invoice</h2>
+              <h2 className="text-lg font-semibold">Nova faktura</h2>
               <button onClick={() => setOpen(false)}><X /></button>
             </div>
             <select className="border rounded p-2 bg-background text-foreground" value={form.client_name} onChange={e => setForm({...form, client_name: e.target.value})}>
-              <option value="">Select Client</option>
+              <option value="">Izaberi klijenta</option>
               {mounted && clients.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
             </select>
-            <Input placeholder="Amount" type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} />
-            <Input placeholder="Due Date" type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} />
+            <Input placeholder="Iznos (€)" type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} />
+            <Input placeholder="Rok plaćanja" type="date" value={form.due_date} onChange={e => setForm({...form, due_date: e.target.value})} />
             <select className="border rounded p-2 bg-background text-foreground" value={form.status} onChange={e => setForm({...form, status: e.target.value})}>
-              <option value="Pending">Pending</option>
-              <option value="Paid">Paid</option>
-              <option value="Overdue">Overdue</option>
+              <option value="Pending">Na čekanju</option>
+              <option value="Paid">Plaćeno</option>
+              <option value="Overdue">Kasni</option>
             </select>
-            <Button onClick={handleAdd}>Save Invoice</Button>
+            <Button onClick={handleAdd}>Spremi fakturu</Button>
           </div>
         </div>
       )}
 
       <Card>
-        <CardHeader><CardTitle>All Invoices ({invoices.length})</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Sve fakture ({invoices.length})</CardTitle></CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Client</TableHead>
-                <TableHead>Amount</TableHead>
+                <TableHead>Klijent</TableHead>
+                <TableHead>Iznos</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Due Date</TableHead>
+                <TableHead>Rok</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -91,7 +93,7 @@ export default function InvoicesPage() {
     inv.status === 'Overdue' ? 'bg-red-500/20 text-red-400' :
     'bg-yellow-500/20 text-yellow-400'
   }`}>
-    {inv.status}
+    {statusLabels[inv.status] ?? inv.status}
   </span>
 </TableCell>
                   <TableCell>{inv.due_date}</TableCell>
