@@ -17,23 +17,24 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-import { revenueData } from '@/lib/data'
 
 const chartConfig = {
-  revenue: { label: 'Revenue', color: 'var(--chart-1)' },
-  expenses: { label: 'Expenses', color: 'var(--chart-2)' },
+  revenue: { label: 'Prihodi', color: 'var(--chart-1)' },
+  expenses: { label: 'Rashodi', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 
-export function RevenueChart() {
+export type RevenuePoint = { month: string; revenue: number; expenses: number }
+
+export function RevenueChart({ data }: { data: RevenuePoint[] }) {
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
-        <CardTitle>Revenue vs Expenses</CardTitle>
-        <CardDescription>Last 6 months performance</CardDescription>
+        <CardTitle>Prihodi i rashodi</CardTitle>
+        <CardDescription>Zadnjih 6 mjeseci</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[280px] w-full">
-          <AreaChart data={revenueData} margin={{ left: 4, right: 4, top: 8 }}>
+          <AreaChart data={data} margin={{ left: 4, right: 4, top: 8 }}>
             <defs>
               <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="var(--color-revenue)" stopOpacity={0.4} />

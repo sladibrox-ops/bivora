@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils'
 export type Stat = {
   label: string
   value: string
-  delta: string
-  trend: 'up' | 'down'
+  delta?: string
+  trend?: 'up' | 'down'
   hint: string
 }
 
@@ -24,6 +24,7 @@ export function StatCards({ stats }: { stats: Stat[] }) {
               {stat.value}
             </span>
             <div className="flex items-center gap-2 text-xs">
+              {stat.delta && (
               <span
                 className={cn(
                   'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 font-medium',
@@ -39,6 +40,7 @@ export function StatCards({ stats }: { stats: Stat[] }) {
                 )}
                 {stat.delta}
               </span>
+              )}
               <span className="text-muted-foreground">{stat.hint}</span>
             </div>
           </CardContent>
