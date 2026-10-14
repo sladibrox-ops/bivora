@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { ServiceWorkerRegister } from '@/components/sw-register'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -34,7 +35,10 @@ export default function RootLayout({
       lang="hr"
       className={`dark ${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="bg-background font-sans antialiased">{children}</body>
+      <body className="bg-background font-sans antialiased">
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   )
 }
