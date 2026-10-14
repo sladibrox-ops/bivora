@@ -9,9 +9,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'BIVORA — Business Management',
+  title: 'BIVORA — poslovna nadzorna ploča',
   description:
-    'BIVORA is a modern business management dashboard for clients, invoices, employees, projects and transactions.',
+    'BIVORA je moderna poslovna nadzorna ploča za klijente, fakture, zaposlenike, projekte i transakcije.',
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {
@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="hr"
       className={`dark ${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="bg-background font-sans antialiased">{children}</body>
