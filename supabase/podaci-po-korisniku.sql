@@ -6,6 +6,7 @@ do $$
 declare
   t text;
   owner uuid;
+  pol record;
 begin
   -- Postojeći redovi dobivaju vlasnika: najstariji račun (prvi registrirani korisnik).
   select id into owner from auth.users order by created_at limit 1;
@@ -23,10 +24,9 @@ begin
     execute format('alter table public.%I enable row level security', t);
 
     -- Ukloni stara pravila koja su dopuštala svima sve.
-    execute (
-      select coalesce(string_agg(format('drop policy if exists %I on public.%I;', policyname, t), ' '), '')
-      from pg_policies where schemaname = 'public' and tablename = t
-    );
+    for pol in select policyname from pg_policies where schemaname = 'public' and tablename = t loop
+      execute format('drop policy if exists %I on public.%I', pol.policyname, t);
+    end loop;
 
     execute format(
       'create policy "Vlastiti podaci" on public.%I for all to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid())',
